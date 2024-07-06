@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:todoapp/screens/home/model.dart';
+import 'package:todoapp/screens/home/model/model.dart';
 
 class FetchTask {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -22,11 +22,14 @@ class FetchTask {
 
         tasks = querySnapshot.docs.map((doc) {
           Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
           return TaskModel(
             docid: doc.id,
             task: data['task'] ?? '',
             id: data['id'] ?? '',
             status: data['status'] ?? false,
+            description: data['description'] ?? '',
+            image_url: data['image_url'] ?? '',
           );
         }).toList();
       }
@@ -54,3 +57,17 @@ class FetchTask {
     }
   }
 }
+
+
+//  Future<void> _loadNote() async {
+//     final doc = await _firestore.collection('users').doc(_userId).collection('tasks').doc('your_task_id').get();
+
+//     if (doc.exists) {
+//       final docString = doc.data()!['description'];
+//       final docJson = jsonDecode(docString);
+//       final document = quill.Document.fromJson(docJson);
+//       setState(() {
+//         _taskDescriptionController.document = document;
+//       });
+//     }
+//   }

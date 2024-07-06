@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = '';
   String password = '';
   final FirebaseAuthService _signinController =
-      FirebaseAuthService(); // Instance of FirebaseController
+      FirebaseAuthService();
   bool _isLoading = false;
   @override
   Widget build(BuildContext context) {

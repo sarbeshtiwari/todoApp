@@ -3,15 +3,16 @@ import 'package:get/get.dart';
 import 'package:todoapp/const/colors.dart';
 import 'package:todoapp/screens/addTask/add_task.dart';
 import 'package:todoapp/screens/auth/login_screen.dart';
-import 'package:todoapp/screens/home/get_task.dart';
-import 'package:todoapp/screens/home/model.dart';
+import 'package:todoapp/screens/home/controller/get_task.dart';
+import 'package:todoapp/screens/home/model/model.dart';
+import 'package:todoapp/screens/home/controller/view_task.dart';
 import 'package:todoapp/screens/initialScreen/initial_screen.dart';
 import 'package:todoapp/widget/delete.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -46,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  //update the status of task
+
   Future<void> _updateTaskStatus(String taskId, bool newStatus) async {
     try {
       // Update the task status in Firestore
@@ -63,17 +66,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Task Manager",
           style: TextStyle(color: AppColors.text),
         ),
         actions: [
           IconButton(
               onPressed: () {
+                //logout button
                 storeLoginState(false);
-                Get.off(LoginScreen());
+                Get.off(const LoginScreen());
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.logout_outlined,
                 color: Colors.white,
               )),
@@ -82,29 +86,29 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: AppColors.appBar,
       ),
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : _tasks.isEmpty
               ? Stack(
                   children: [
-                    Center(child: Text("No tasks found")),
+                    const Center(child: Text("No tasks found")),
                     Positioned(
                       bottom: 16.0,
                       right: 16.0,
                       child: FloatingActionButton(
                         onPressed: () {
-                          Get.to(() => AddTask());
+                          Get.to(() => const AddTask());
                         },
-                        child: Icon(Icons.add),
+                        child: const Icon(Icons.add),
                       ),
                     ),
                   ],
                 )
               : Stack(
                   children: [
-                    ListView.builder(
-                      padding: EdgeInsets.symmetric(
+                    ListView.builder(      
+                      padding: const EdgeInsets.symmetric(
                           horizontal: 16.0, vertical: 20.0),
                       itemCount: _tasks.length,
                       itemBuilder: (context, index) {
@@ -114,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           direction: DismissDirection.horizontal,
                           background: Container(
                             color: Colors.red,
-                            child: Row(
+                            child: const Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
                                 Padding(
@@ -125,11 +129,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
+
+                          //deleting a task
                           confirmDismiss: (DismissDirection direction) async {
                             bool? confirm = await showDeleteConfirmationDialog(
                                 context, task.docid);
                             return confirm;
                           },
+                          //sliding a task to delete
                           onDismissed: (direction) {
                             // Remove the item from the data source
                             if (direction == DismissDirection.endToStart) {
@@ -138,31 +145,43 @@ class _HomeScreenState extends State<HomeScreen> {
                               });
 
                               ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
+                                  .showSnackBar(const SnackBar(
                                 content: Text("Task deleted"),
                               ));
                             }
                           },
-                          child: ListTile(
-                            title: Text(
-                              task.task,
-                              style: task.status
-                                  ? TextStyle(
-                                      fontStyle: FontStyle.italic,
-                                      decoration: TextDecoration.lineThrough)
-                                  : TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            trailing: Checkbox(
-                              value: task.status,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  task.status = value ?? false;
-                                });
-                                print(task.id);
-                                print(task.status);
-                                print(task.docid);
-                                _updateTaskStatus(task.docid, task.status);
-                              },
+                          child: GestureDetector(
+                            onTap: () {
+                              print(task.description);
+                              //switch to new screen to view task in detail
+                              viewTask(context,
+                                  task: task.task,
+                                  description: task.description,
+                                  image_url: task.image_url);
+                            },
+                            child: ListTile(
+                              title: Text(
+                                task.task,
+                                style: task.status
+                                    ? const TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        decoration: TextDecoration.lineThrough)
+                                    : const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                              ),
+                              //to update a task status
+                              trailing: Checkbox(
+                                value: task.status,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    task.status = value ?? false;
+                                  });
+                                  print(task.id);
+                                  print(task.status);
+                                  print(task.docid);
+                                  _updateTaskStatus(task.docid, task.status);
+                                },
+                              ),
                             ),
                           ),
                         );
@@ -173,9 +192,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       right: 16.0,
                       child: FloatingActionButton(
                         onPressed: () {
-                          Get.to(AddTask());
+                          Get.to(const AddTask());
                         },
-                        child: Icon(Icons.add),
+                        child: const Icon(Icons.add),
                       ),
                     ),
                   ],

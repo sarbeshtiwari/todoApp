@@ -27,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   bool _passwordsMatch = true; // State to track if passwords match
   final FirebaseAuthService _signupController =
-      FirebaseAuthService(); // Instance of FirebaseController
+      FirebaseAuthService(); 
 
   @override
   Widget build(BuildContext context) {

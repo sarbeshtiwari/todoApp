@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/screens/home/delete_task.dart';
+import 'package:todoapp/screens/home/controller/delete_task.dart';
 
 Future<bool?> showDeleteConfirmationDialog(BuildContext context, docId) async {
   final DeleteTask _delete = DeleteTask();

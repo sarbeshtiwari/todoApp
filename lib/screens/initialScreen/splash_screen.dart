@@ -12,7 +12,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to Login Page after 3 seconds
+    // Navigate to Next Page after 3 seconds
     Future.delayed(Duration(seconds: 3), () {
       Get.off(InitialScreen());
     });
